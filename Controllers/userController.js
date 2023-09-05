@@ -163,7 +163,9 @@ module.exports.authenticate_jwt = asyncHandler(async (req, res, next) => {
     }
     else {
         let new_tok_string = user.generateRefreshToken();
-        let new_token = await RefreshToken.findOneAndUpdate({user: user_tok.id}, {token: new_tok_string}, {new:true});
+        console.log(user_tok)
+        let new_token = await RefreshToken.findOneAndUpdate({user: user_tok.id}, {token: new_tok_string}, {new:true}).exec();
+        console.log(new_token);
     }
 
     console.log(user_tok)
@@ -202,7 +204,11 @@ module.exports.logout = async function(req, res) {
 
     console.log(req);
 
+    await mongoose.connect(process.env.MONGO);
+
     let refreshQuery = await RefreshToken.findOne({user: token.id}).exec();
+
+    console.log(refreshQuery);
 
     if (!refreshQuery) {
         return res
@@ -217,7 +223,7 @@ module.exports.logout = async function(req, res) {
     return res
     .clearCookie("token")
     .clearCookie("refreshToken")
-    .status(200)
+    .status(200).redirect("/login")
 }
 
 /**
@@ -239,6 +245,8 @@ module.exports.get_user_detail = async (req, res) => {
 }
 
 module.exports.get_user_dash = async (req, res) => {
-    console.log(req.id)
-
+    console.log(req.id);
+    res.render("user_dash", {
+        id: req.id
+    });
 }

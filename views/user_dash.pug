@@ -1,0 +1,15 @@
+extends layout 
+
+block header 
+  section(class="logo")
+  form(action="/user/", method="get") 
+   input(type="submit", value="home")
+
+block navigation 
+ form(action="/user/logout", method="post")
+  input(type="submit", value="logout") 
+ form(action="/user/dashboard/create_article", method="get") 
+  input(type="submit", value="create article")
+
+block content 
+ 
