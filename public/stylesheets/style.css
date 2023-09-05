@@ -1,0 +1,40 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr fit-content 1fr;
+
+}
+@media (prefers-color-scheme: dark) {
+    body {
+      background-color:#021c2b;
+    }
+}
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: rgb(154, 141, 31);
+  }
+}
+
+nav {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+footer {
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+
+main {
+  grid-column-start: 2;
+  grid-column-end: 4; 
+}
+
+a {
+  color: #00B7FF;
+}
+
