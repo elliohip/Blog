@@ -1,0 +1,14 @@
+extends user_dash 
+
+block content 
+ article(class="create-article")
+  h1() create new article: 
+  form(action="/user/dashboard/create_article", method="post", class="create-article-form") 
+   label() author name: 
+    input(type="text", name="author_pen_name")
+   label() title of article: 
+    input(type="text", name="title")
+     
+   label(class="create-article-content") text content: 
+    textarea(cols=40, rows=30, name="article_content", class="article-content") 
+   input(type="submit", value="create article", class="submit-button")

@@ -44,6 +44,12 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
                 return res.render("sign_up", {message: "email is invalid"});
             }
 
+            let password_validation = (req.body.password == req.body.confirm_password);
+
+            if (!password_validation) {
+                return res.render("sign_up", {message: "password and confirm password doesnt match"});
+            }
+
             let user = new User(user_object);
 
             console.log(user)

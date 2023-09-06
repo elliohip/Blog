@@ -24,9 +24,28 @@ const userSchema = new Schema({
     saved: [{type: Schema.Types.ObjectId, ref: "Article"}],
     liked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     disliked: [{type: Schema.Types.ObjectId, ref: "Article"}],
-    
+    notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}]
 
 });
+
+userSchema.methods.add_notification = async function(add_id) {
+
+    let notifs = this.notifications;
+
+    notifs.push(add_id);
+
+    this.model().findOneAndUpdate({_id: this._id}, {notifications: notifs}, {});
+
+}
+
+userSchema.methods.remove_notification = async function(remove_id) {
+
+    let notifs = this.notifications;
+
+    notifs.filter((data) => data != remove_id);
+
+    this.model().findOneAndUpdate({_id: this._id}, {notifications: notifs}, {});
+}
 
 /**
  * 

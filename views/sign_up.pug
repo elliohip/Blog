@@ -2,17 +2,21 @@ extends layout
 
 block content 
  p=message
- h1() sign up: 
- form(action="/signup", method="post") 
-  label() username: 
-   input(type="text", name="username")
-  label() password: 
-   input(type="text", name="password")
-  label() confirm password: 
-   input(type="text", name="confirm_password")
-  label() email:  
-   input(type="email", name="email")
-  input(type="submit", value="Sign Up")
- h1() already have an account?: 
- form(action="/login", method="get") 
-  input(type="submit", value="login")
+ article(class="signup-article")
+  h1() sign up: 
+  form(action="/signup", method="post") 
+   label() username: 
+    input(type="text", name="username")
+   label() password: 
+    input(type="text", name="password")
+   label() confirm password: 
+    input(type="text", name="confirm_password")
+   label() email:  
+    input(type="email", name="email")
+   input(type="submit", value="Sign Up", class="signup-button")
+  h1() already have an account?: 
+  form(action="/login", method="get", class="login-page-button") 
+   input(type="submit", value="login")
+  h1() Continue as Guest: 
+  form(action="/guest", method="get", class="guest-page-button")
+   input(type="submit", value="guest home") 
