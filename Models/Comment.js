@@ -6,9 +6,9 @@ let Schema = mongoose.Schema
  * Schema for a single comment
  */
 let commentSchema = new Schema({
-    article: {type: Schema.Types.ObjectId, ref: "Article"}, 
-    author: {type: Schema.Types.ObjectId, ref: "Author"}, 
-    content: {type: String},
+    article: {type: Schema.Types.ObjectId, ref: "Article", required: true}, 
+    author: {type: Schema.Types.ObjectId, ref: "User", required: true}, 
+    content: {type: String, required: true},
     replies: [{type: Schema.Types.ObjectId, ref: "Comment"}]
 });
 

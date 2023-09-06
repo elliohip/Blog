@@ -18,7 +18,13 @@ block navigation
   input(type="submit", value="subscribers")
  
 block content
- 
+ p="recommended articles"
+ ul() 
+  if recommended
+   each item in recommended 
+    li() 
+     form(action="/user/" + item.id, method="get")
+      input(type="submit", value=item.title) 
 
 block footer 
  

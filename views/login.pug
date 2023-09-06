@@ -1,8 +1,14 @@
 extends layout 
 
+block header 
+ // logo goes here now placeholder
+ section()
+ 
+block navigation 
 
 block content 
  p=message
+ h1() Log In: 
  form(action="/login", method="post") 
   label() username: 
    input(type="text", name="username")
@@ -13,6 +19,11 @@ block content
  h1() dont have an account? 
  form(action="/signup", method="get")
   input(type="submit", value="sign up") 
-
+ h1() continue as guest: 
  form(action="/guest", method="get")
   input(type="submit", value="continue as guest") 
+
+
+ 
+block footer 
+ section()

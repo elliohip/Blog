@@ -10,6 +10,7 @@ const RefreshToken = require("../Models/RefreshToken")
 const { default: mongoose, get } = require("mongoose");
 
 const jwt = require("jsonwebtoken");
+const { get_all_articles } = require("../utils/article_lists/article_dashboards");
 
 /**
  * sends a sign up result to the 
@@ -193,9 +194,14 @@ module.exports.get_user_home = asyncHandler(async (req, res, next) => {
 
     console.log(user_db);
 
-    res.render("user_view", {
-        user_object: user_db
-  });
+    let homepage_object = {
+        id: req.id,
+        recommended: await get_all_articles()
+    }
+
+    console.log(homepage_object);
+
+    res.render("user_view", homepage_object);
 });
 
 module.exports.logout = async function(req, res) {
@@ -245,8 +251,16 @@ module.exports.get_user_detail = async (req, res) => {
 }
 
 module.exports.get_user_dash = async (req, res) => {
-    console.log(req.id);
-    res.render("user_dash", {
-        id: req.id
-    });
+
+    console.log("fired get dashboard")
+
+
+    // TODO: CHANGE THIS
+    let dashboard_object = {
+        id: req.id,
+        recommended: get_all_articles()
+    }
+    console.log(dashboard_object);
+    
+    res.render("user_dash", dashboard_object);
 }

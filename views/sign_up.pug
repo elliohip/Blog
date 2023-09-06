@@ -2,9 +2,7 @@ extends layout
 
 block content 
  p=message
- p() already have an account?: 
- form(action="/login", method="get") 
-  input(type="submit", value="login")
+ h1() sign up: 
  form(action="/signup", method="post") 
   label() username: 
    input(type="text", name="username")
@@ -15,3 +13,6 @@ block content
   label() email:  
    input(type="email", name="email")
   input(type="submit", value="Sign Up")
+ h1() already have an account?: 
+ form(action="/login", method="get") 
+  input(type="submit", value="login")

@@ -6,15 +6,23 @@ body {
   grid-template-rows: 1fr fit-content 1fr;
 
 }
+
 @media (prefers-color-scheme: dark) {
     body {
-      background-color:#021c2b;
+      background-color:black;
+      color: white;
+    }
+    header {
+      background-color:teal;
       color: white;
     }
 }
 @media (prefers-color-scheme: light) {
   body {
-    background-color: rgb(154, 141, 31);
+    background-color:khaki;
+  }
+  header {
+    background-color: teal;
   }
 }
 
@@ -23,6 +31,14 @@ nav {
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 3;
+}
+
+header {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: -1;
+  min-height: 50px;
 }
 
 footer {
