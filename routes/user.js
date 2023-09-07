@@ -17,6 +17,8 @@ router.get("/search_user/:user_id", userController.authenticate_jwt, userControl
 
 router.get("/dashboard", userController.authenticate_jwt, userController.get_user_dash);
 
+router.get("/article/:article_id", userController.authenticate_jwt, articleController.get_article_by_id);
+
 router.get("/dashboard/create_article", userController.authenticate_jwt, articleController.get_create_article);
 router.post("/dashboard/create_article", userController.authenticate_jwt, articleController.post_create_text_article);
 

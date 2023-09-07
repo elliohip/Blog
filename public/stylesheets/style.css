@@ -16,6 +16,13 @@ body {
       background-color:rgb(1, 75, 75);
       color: white;
     }
+    .no-style-a {
+      text-decoration: none;
+      color: white;
+    }
+    .article-widget {
+      border: rgb(1, 75, 75) solid 1px;
+    }
 }
 @media (prefers-color-scheme: light) {
   body {
@@ -70,7 +77,7 @@ input.article-content{
   overflow: scroll;
 }
 
-.create-article-content{
+label.create-article-content{
   display: flex;
   flex-flow: column;
 }
@@ -103,6 +110,10 @@ input.article-content{
 
 .create-article{
   gap: 10px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-article .submit-button{
@@ -137,10 +148,74 @@ input.article-content{
   padding-bottom: 20px;
 }
 
-.article-content {
+textarea.create-article-content {
   align-items: start;
   display: flex;
   resize: vertical;
   align-content: start;
   justify-content: center;
+}
+
+.main-user-view{
+  display: grid;
+  grid-template-rows: fit-content fit-content;
+}
+
+article ul{
+  list-style: none;
+  max-width: 600px;
+  justify-self: center;
+  align-self: center;
+}
+
+input[type="submit"], input[type="reset"] {
+	background: none;
+	border: none;
+	padding: 0;
+
+	cursor: pointer;
+	outline: inherit;
+  background-color: white;
+}
+
+.article-widget{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: clamp(5px, 10%, 20px)
+}
+.article-widget-description{
+  grid-column-start: 1;
+  grid-column-end: -1;
+}
+
+.article-widget-title{
+  grid-column-start: 1;
+  grid-column-end: -1;
+}
+
+.article-widget-dislikes{
+  display: flex;
+  flex-flow: row-reverse;
+}
+
+.create-article-description {
+
+}
+
+.create-article-description-label {
+  display:grid;
+  grid-template-columns: 1fr;
+  flex-direction: column;
+}
+
+ul.article-list{
+  display: grid;
+  grid-template-columns: 1fr;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.article-text-content {
+
 }

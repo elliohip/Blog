@@ -10,7 +10,8 @@ let articleSchema = new Schema({
     content: {type: String},
     likes: [{type: Schema.Types.ObjectId, ref: "User"}],
     dislikes: [{type: Schema.Types.ObjectId, ref: "User"}],
-    comments: [{type: Schema.Types.ObjectId, ref: "Comment"}]
+    comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
+    description: {type: String}
 });
 
 /**

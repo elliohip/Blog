@@ -15,7 +15,18 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
     console.log(req.params)
 
-    let article = req.params.article_id;
+    await mongoose.connect(process.env.MONGO);
+
+    let article_db = await Article.findById(req.params.article_id).exec();
+
+    console.log(article_db)
+
+    res.render("display_article", {
+        article: article_db
+    })
+    
+    next();
+    await mongoose.disconnect();
 
 });
 
@@ -56,16 +67,23 @@ module.exports.post_create_text_article = async (req, res) => {
 
     let current_user = await User.findById(req.id).exec();
 
+    
+
     console.log(current_user)
     let article = new Article({
         author: req.id,
         author_pen_name: req.body.author_pen_name,
         title: req.body.title,
-        content: req.body.article_content
+        content: req.body.article_content,
+        description: req.body.description
     });
     console.log(article);
 
+    await current_user.add_article(article._id);
 
+    await article.save();
 
     await mongoose.disconnect();
+
+    return res.render("user_dash");
 }

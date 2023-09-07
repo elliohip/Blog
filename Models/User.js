@@ -28,13 +28,21 @@ const userSchema = new Schema({
 
 });
 
+userSchema.methods.add_article = async function(add_id) {
+    let article_list = this.articles;
+
+    article_list.push(add_id);
+
+    this.model("User").findOneAndUpdate({_id: this._id}, {articles: article_list});
+}
+
 userSchema.methods.add_notification = async function(add_id) {
 
     let notifs = this.notifications;
 
     notifs.push(add_id);
 
-    this.model().findOneAndUpdate({_id: this._id}, {notifications: notifs}, {});
+    this.model().findOneAndUpdate({_id: this._id}, {notifications: notifs});
 
 }
 

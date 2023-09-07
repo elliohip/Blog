@@ -18,13 +18,20 @@ block navigation
   input(type="submit", value="subscribers")
  
 block content
- p="recommended articles"
- ul() 
-  if recommended
-   each item in recommended 
-    li() 
-     form(action="/user/" + item.id, method="get")
-      input(type="submit", value=item.title) 
+ article(class="main-user-view")
+  h1(class="recommended-articles-label") recommended articles
+  ul(class="article-list") 
+   if recommended
+    each item in recommended 
+     li() 
+      a(class="no-style-a", href="/user/article/" + item._id)
+       div(class="article-widget")
+        p(class="article-widget-title")  #{item.title}
+        if item.description 
+         p(class="article-widget-description") #{item.description}
+        p(class="article-widget-likes")  #{"likes: " + item.likes.length}
+        p(class="article-widget-dislikes") #{ "dislikes: " + item.dislikes.length}
+
 
 block footer 
  

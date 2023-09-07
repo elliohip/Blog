@@ -8,7 +8,8 @@ block content
     input(type="text", name="author_pen_name")
    label() title of article: 
     input(type="text", name="title")
-     
+   label(class="create-article-description-label") description: 
+    textarea(name="description", cols="30", rows="10", class="create-article-description") 
    label(class="create-article-content") text content: 
-    textarea(cols=40, rows=30, name="article_content", class="article-content") 
+    textarea(cols=40, rows=30, name="article_content", class="create-article-content") 
    input(type="submit", value="create article", class="submit-button")

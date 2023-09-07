@@ -261,7 +261,7 @@ module.exports.get_user_dash = async (req, res) => {
     console.log("fired get dashboard")
 
 
-    // TODO: CHANGE THIS
+    // TODO: CHANGE THIS TO NOT ALL, CHANGE TO RECCOMENDED
     let dashboard_object = {
         id: req.id,
         recommended: get_all_articles()
