@@ -4,8 +4,8 @@ let Schema = mongoose.Schema
 
 
 let ArticleWebSchema = new Schema({
-    article: {type: Schema.Types.ObjectId},
-    file: {type: File}
+    article: {type: Schema.Types.ObjectId, ref: "Article"},
+    file: {type: Schema.Types.Mixed}
 });
 
 

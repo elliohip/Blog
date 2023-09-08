@@ -2,5 +2,8 @@ extends user_view
 
 block content 
  article(class="text-article-view")
-  h1()  #{article.title} 
+  if web_article
+   a(href="/user/web_article/" + web_article._id)
+    p() check out a better format 
+  h1(class="article-title")  #{article.title} 
   p(class="article-text-content") #{article.content} 

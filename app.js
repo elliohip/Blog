@@ -10,6 +10,8 @@ var passport = require('passport')
 var LocalStrategy = require('passport-local');
 var passportLocalMongoose = require("passport-local-mongoose");
 
+const cors = require("cors");
+
 var User = require("./Models/User");
 
 
@@ -25,6 +27,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

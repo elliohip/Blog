@@ -11,7 +11,8 @@ let articleSchema = new Schema({
     likes: [{type: Schema.Types.ObjectId, ref: "User"}],
     dislikes: [{type: Schema.Types.ObjectId, ref: "User"}],
     comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
-    description: {type: String}
+    description: {type: String}, 
+    web_article: {type: Schema.Types.ObjectId, ref: "Web_Article"}
 });
 
 /**

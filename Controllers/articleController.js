@@ -9,6 +9,10 @@ const email_validator = require("deep-email-validator")
 const { default: mongoose, get } = require("mongoose");
 
 const jwt = require("jsonwebtoken");
+const Web_Article = require("../Models/Web_Article");
+
+const fs = require("fs")
+
 
 
 module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
@@ -19,9 +23,12 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
     let article_db = await Article.findById(req.params.article_id).exec();
 
+    let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
+
     console.log(article_db)
 
     res.render("display_article", {
+        web_article: web_article_db,
         article: article_db
     })
     
@@ -52,6 +59,8 @@ module.exports.get_create_article = async (req, res) => {
     })
 }
 
+
+
 /**
  * posts a create article as an HTML document with the script tags filtered out using HTML Purifier
  * 
@@ -67,9 +76,12 @@ module.exports.post_create_text_article = async (req, res) => {
 
     let current_user = await User.findById(req.id).exec();
 
+    console.log(req);
+
+    console.log(req.files);
     
 
-    console.log(current_user)
+    // console.log(current_user)
     let article = new Article({
         author: req.id,
         author_pen_name: req.body.author_pen_name,
@@ -77,13 +89,40 @@ module.exports.post_create_text_article = async (req, res) => {
         content: req.body.article_content,
         description: req.body.description
     });
-    console.log(article);
 
     await current_user.add_article(article._id);
 
     await article.save();
 
+    if (req.files[0]) {
+        
+        let web_article = new Web_Article({
+            article: article._id,
+            file: req.files[0]
+        });
+
+        await web_article.save();
+    }
+    console.log(article);
+
+    
+
     await mongoose.disconnect();
 
     return res.render("user_dash");
-}
+};
+
+
+
+module.exports.get_web_article = asyncHandler(async(req, res, next) => {
+    await mongoose.connect(process.env.MONGO);
+
+    let web_article = await Web_Article.findById(req.params.web_article_id).exec();
+
+    console.log(web_article.file.destination);
+
+    res.send(fs.readFileSync(web_article.file.destination + "/" +  web_article.file.filename).toString());
+
+    await mongoose.disconnect()
+
+});

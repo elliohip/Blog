@@ -216,6 +216,18 @@ ul.article-list{
   gap: 5px;
 }
 
+p.article-text-content {
+  line-height: 1.5;
+  font-size: clamp(1rem, 2%, 20pt);
+}
+
+.article-title {
+  padding-bottom: min(20px, 20%);
+  padding-top: min(20px, 20%);
+  align-content: center;
+}
+
 .article-text-content {
+  line-height:2;
 
 }
