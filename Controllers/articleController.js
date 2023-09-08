@@ -90,19 +90,29 @@ module.exports.post_create_text_article = async (req, res) => {
         description: req.body.description
     });
 
-    await current_user.add_article(article._id);
+    await current_user.articles.push(article._id);
+    console.log(current_user.isNew);
+    await current_user.save();
 
     await article.save();
 
     if (req.files[0]) {
+
+        console.log(req.files[0]);
         
         let web_article = new Web_Article({
             article: article._id,
-            file: req.files[0]
+            file: fs.readFileSync(req.files[0].path).toString() 
+            
         });
+
+        fs.rm(files[0].destination, + "/" + files[0].filename);
+        
+
 
         await web_article.save();
     }
+
     console.log(article);
 
     
@@ -121,8 +131,31 @@ module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
     console.log(web_article.file.destination);
 
-    res.send(fs.readFileSync(web_article.file.destination + "/" +  web_article.file.filename).toString());
+    res.send(web_article.file);
 
     await mongoose.disconnect()
+
+});
+
+
+module.exports.add_like = asyncHandler(async(req, res, next) => {
+
+    await mongoose.connect(process.env.MONGO);
+
+    let user = await User.findById(req.id).exec();
+    let article_db = await Article.findById(req.params.article_id).exec();
+
+    let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
+
+    article_db.likes.push(user._id);
+
+    article_db.save();
+
+    res.render("display_article", {
+        article: article_db,
+        web_article: web_article_db
+    })
+
+    await mongoose.disconnect();
 
 });

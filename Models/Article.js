@@ -12,8 +12,13 @@ let articleSchema = new Schema({
     dislikes: [{type: Schema.Types.ObjectId, ref: "User"}],
     comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
     description: {type: String}, 
-    web_article: {type: Schema.Types.ObjectId, ref: "Web_Article"}
+    web_article: {type: Schema.Types.ObjectId, ref: "Web_Article"},
+    page_views: {type: Number}
 });
+
+articleSchema.methods.add_view = async function() {
+    await this.model("Article").findOneAndUpdate({_id: this._id}, {page_views: this.page_views + 1}, {new: true})
+}
 
 /**
  * gets the URL for this article

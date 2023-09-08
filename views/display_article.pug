@@ -7,3 +7,7 @@ block content
     p() check out a better format 
   h1(class="article-title")  #{article.title} 
   p(class="article-text-content") #{article.content} 
+  div(id="article-like-button-div")
+   a(href="/user/article/" + article._id + "/like-article")
+    div() like button   
+   

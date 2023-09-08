@@ -23,6 +23,8 @@ router.get("/dashboard", userController.authenticate_jwt, userController.get_use
 
 router.get("/article/:article_id", userController.authenticate_jwt, articleController.get_article_by_id);
 
+router.get("/article/:article_id/like-article", userController.authenticate_jwt, articleController.add_like);
+
 router.get("/web_article/:web_article_id", userController.authenticate_jwt, articleController.get_web_article);
 
 router.get("/dashboard/create_article", userController.authenticate_jwt, articleController.get_create_article);

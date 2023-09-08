@@ -2,12 +2,12 @@ extends layout
 
 block header 
   section(class="logo")
-  form(action="/user/", method="get") 
-   input(type="submit", value="home")
+  form(action="/user/", method="get", class="home-btn-form") 
+   input(type="submit", value="home", class="home-btn")
 
 block navigation  
  form(action="/user/dashboard", method="get")
-  input(type="submit", value="dashboard")
+  input(type="submit", value="dashboard", class="nav-dash-btn")
  form(action="/user/search_article", method="get")
   input(type="submit", value="search for article")
  form(action="/user/search_user", method="get")

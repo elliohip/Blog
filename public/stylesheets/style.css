@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   display: grid;
   grid-template-columns: 1fr fit-content 1fr;
@@ -10,32 +10,64 @@ body {
 @media (prefers-color-scheme: dark) {
     body {
       background-color:black;
-      color: white;
+      color: rgb(237, 234, 200);
     }
     header {
       background-color:rgb(1, 75, 75);
-      color: white;
+      color: rgb(237, 234, 200);
     }
     .no-style-a {
       text-decoration: none;
-      color: white;
+      color: rgb(237, 234, 200);
     }
     .article-widget {
       border: rgb(1, 75, 75) solid 1px;
     }
+    .home-btn {
+      background-color: rgb(237, 234, 200);
+      color: black;
+    }
+    .home-btn:hover {
+      background-color: black;
+      color: rgb(237, 234, 200);
+    }
+    nav > form > *:hover {
+      background-color:rgb(1, 75, 75);
+      color: rgb(237, 234, 200);
+    }    
+
+    nav > form > * {
+      background-color: rgb(237, 234, 200);
+      color: rgb(1, 75, 75);
+    }
+
 }
 @media (prefers-color-scheme: light) {
   body {
-    background-color:khaki;
+    background-color:rgb(237, 234, 200);;
   }
   header {
     background-color: rgb(1, 75, 75);
+  }
+  .home-btn:hover {
+    background-color: rgb(237, 234, 200);;
+    color: rgb(1, 75, 75);
+  }
+
+  nav > form > *:hover {
+    background-color: rgb(237, 234, 200);;
+    color: rgb(1, 75, 75);
+  } 
+  nav > form > * {
+    background-color: rgb(1, 75, 75);
+    color: rgb(237, 234, 200);;
   }
 }
 
 nav {
   grid-row-start: 1;
   grid-row-end: -1;
+  padding: clamp(10px, 10%, 20px)
 }
 
 header {
@@ -44,6 +76,10 @@ header {
   grid-column-start: 1;
   grid-column-end: 4;
   min-height: 50px;
+  position: sticky;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 1fr;
 }
 
 footer {
@@ -169,13 +205,9 @@ article ul{
 }
 
 input[type="submit"], input[type="reset"] {
-	background: none;
 	border: none;
-	padding: 0;
-
 	cursor: pointer;
 	outline: inherit;
-  background-color: white;
 }
 
 .article-widget{
@@ -230,4 +262,11 @@ p.article-text-content {
 .article-text-content {
   line-height:2;
 
+}
+
+.home-btn {
+  width: clamp(50px, 10%, 200px)
+}
+.home-btn-form {
+  padding-top: 10px;
 }
