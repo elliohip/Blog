@@ -27,13 +27,15 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
     console.log(article_db)
 
+    await mongoose.disconnect();
+
     res.render("display_article", {
         web_article: web_article_db,
         article: article_db
     })
     
     next();
-    await mongoose.disconnect();
+    
 
 });
 
@@ -49,10 +51,10 @@ module.exports.get_create_article = async (req, res) => {
 
     await mongoose.connect(process.env.MONGO)
 
-    let user_db = User.findById(req.id).exec();
+    let user_db = await User.findById(req.id).exec();
     if (!user_db) {console.error("no user!!")};
     
-    // await mongoose.disconnect();
+    await mongoose.disconnect();
 
     res.status(200).render("create_article", {
         user: user_db
@@ -99,14 +101,19 @@ module.exports.post_create_text_article = async (req, res) => {
     if (req.files[0]) {
 
         console.log(req.files[0]);
+
+        let string_file = fs.readFileSync(req.files[0].path).toString();
         
         let web_article = new Web_Article({
             article: article._id,
-            file: fs.readFileSync(req.files[0].path).toString() 
+            file: string_file
             
         });
 
-        fs.rm(files[0].destination, + "/" + files[0].filename);
+        fs.rm(req.files[0].path, (err) => {
+            console.log("completed")
+            
+        });
         
 
 
@@ -131,9 +138,11 @@ module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
     console.log(web_article.file.destination);
 
+    await mongoose.disconnect()
+
     res.send(web_article.file);
 
-    await mongoose.disconnect()
+    
 
 });
 
@@ -142,20 +151,128 @@ module.exports.add_like = asyncHandler(async(req, res, next) => {
 
     await mongoose.connect(process.env.MONGO);
 
+    
+
     let user = await User.findById(req.id).exec();
     let article_db = await Article.findById(req.params.article_id).exec();
-
     let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
 
-    article_db.likes.push(user._id);
+    if (!(article_db.likes.includes(user._id))) {
+        await article_db.updateOne({
+            $push: {likes: user._id}
+        }).exec();
 
-    article_db.save();
+        await user.updateOne({
+            $push: {likes: article_db._id}
+        }).exec();
+        
+        if (article_db.dislikes.includes(user._id)) {
+            console.log(article_db.dislikes);
+
+            await article_db.updateOne({
+                $pull: {dislikes: user._id}
+            }, {}).exec();
+
+            console.log("article likes " + article_db.likes);
+            console.log("user liked " + user.liked);
+
+            await user.updateOne({
+                $pull: {disliked: article_db._id},
+            }, {}).exec();
+
+            console.log("user disliked " + user.disliked);
+
+            
+        }
+
+        
+    } else {
+
+        console.log("article likes " + article_db.likes);
+
+        await article_db.updateOne({
+            $pull: {likes: user._id}
+        }, {}).exec();
+        console.log("article likes " + article_db.likes);
+        console.log("user liked " + user.liked);
+        await user.updateOne({
+            $pull: {liked: article_db._id},
+        }, {}).exec();
+
+        console.log("user liked " + user.liked);
+
+        
+        
+        console.log("article likes " + article_db.likes);
+        console.log("user liked " + user.liked);
+    }
+
+    
+
+    await mongoose.disconnect();
 
     res.render("display_article", {
         article: article_db,
         web_article: web_article_db
-    })
+    });
+
+});
+
+module.exports.add_dislike = asyncHandler(async (req, res, next) => {
+    await mongoose.connect(process.env.MONGO);
+
+    
+
+    let user = await User.findById(req.id).exec();
+    let article_db = await Article.findById(req.params.article_id).exec();
+    let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
+
+    if (!(article_db.dislikes.includes(user._id))) {
+
+        await article_db.updateOne({
+            $push: {dislikes: user._id}
+        }).exec();
+
+        await user.updateOne({
+            $push: {dislikes: article_db._id}
+        }).exec();
+
+        
+        if (article_db.likes.includes(user._id)) {
+
+            console.log(article_db.likes);
+
+            await article_db.updateOne({
+                $pull: {likes: user._id}
+            }, {}).exec();
+            console.log("article likes " + article_db.likes);
+            console.log("user liked " + user.liked);
+            await user.updateOne({
+                $pull: {liked: article_db._id},
+            }, {}).exec();
+
+            console.log("user liked " + user.liked);
+        }
+        
+    }
+    else {
+        await article_db.updateOne({
+            $pull: {dislikes: user._id}
+        }, {new:true}).exec();
+
+        console.log("article likes " + article_db.likes);
+        console.log("user liked " + user.liked);
+        await user.updateOne({
+            $pull: {disliked: article_db._id},
+        }, {new:true}).exec();
+    }
+
+    
 
     await mongoose.disconnect();
 
-});
+    res.render("display_article", {
+        article: article_db,
+        web_article: web_article_db
+    });
+})

@@ -9,5 +9,8 @@ block content
   p(class="article-text-content") #{article.content} 
   div(id="article-like-button-div")
    a(href="/user/article/" + article._id + "/like-article")
-    div() like button   
+    div() like button 
+  div(id="article-dislike-button-div") 
+   a(href="/user/article/" + article._id + "/dislike-article")
+    div() dislike button 
    

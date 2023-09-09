@@ -44,30 +44,31 @@ body {
 }
 @media (prefers-color-scheme: light) {
   body {
-    background-color:rgb(237, 234, 200);;
+    background-color:rgb(237, 234, 200);
   }
   header {
     background-color: rgb(1, 75, 75);
   }
   .home-btn:hover {
-    background-color: rgb(237, 234, 200);;
+    background-color: rgb(237, 234, 200);
     color: rgb(1, 75, 75);
   }
 
   nav > form > *:hover {
-    background-color: rgb(237, 234, 200);;
+    background-color: rgb(237, 234, 200);
     color: rgb(1, 75, 75);
   } 
   nav > form > * {
     background-color: rgb(1, 75, 75);
-    color: rgb(237, 234, 200);;
+    color: rgb(237, 234, 200);
   }
 }
 
 nav {
   grid-row-start: 1;
   grid-row-end: -1;
-  padding: clamp(10px, 10%, 20px)
+  padding: clamp(10px, 10%, 20px);
+  gap: 5px;
 }
 
 header {
