@@ -1,11 +1,16 @@
+import domPurify from "dompurify"
+
+
 let article_form = document.getElementById("create-article-form-ident");
 let article_title = document.getElementById("create-article-title");
 let article_description = document.getElementById("create-article-title");
 let article_content = document.getElementById("create-article-title");
 let article_penname = document.getElementById("create-article-title");
-let article_file = document.getElementById("create-article-file")
+let article_file = document.getElementById("create-article-file");
 
-article_form.addEventListener('submit', (ev) => {
+// IMPORTANT FOR CSS LOADER
+if (article_form) {
+ article_form.addEventListener('submit', (ev) => {
     ev.preventDefault();
 
     let data = new FormData();
@@ -19,7 +24,9 @@ article_form.addEventListener('submit', (ev) => {
     console.log("title" + data);
     data.append("description", article_description.value);
     console.log("description" + data);
-    data.append("article_file", article_file.files[0]);
+
+
+        data.append("article_file", article_file.files[0]);
     
     console.log("file" + data);
 
@@ -30,4 +37,5 @@ article_form.addEventListener('submit', (ev) => {
         body: data
     }).then(res => res.json())
     
-});
+ });
+};

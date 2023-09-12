@@ -24,7 +24,8 @@ const userSchema = new Schema({
     saved: [{type: Schema.Types.ObjectId, ref: "Article"}],
     liked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     disliked: [{type: Schema.Types.ObjectId, ref: "Article"}],
-    notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}]
+    notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}],
+    role: {type: String, enum: ['admin', 'user'], default: 'user'}
 
 });
 
@@ -69,7 +70,8 @@ userSchema.methods.comparePassword = async function(other) {
 userSchema.methods.generateJWT = function() {
 
     let jwt_payload = {
-        id: this._id
+        id: this._id,
+        role: this.role
     };
 
     console.log(process.env.EXPRESS_REFRESH_SECRET);
@@ -92,7 +94,8 @@ userSchema.methods.generateJWT = function() {
 
 userSchema.methods.generateRefreshToken = function() {
     let jwt_payload = {
-        id: this._id
+        id: this._id,
+        role: this.role
     };
 
     let refresh_token = jwt.sign(jwt_payload, process.env.EXPRESS_REFRESH_SECRET, {

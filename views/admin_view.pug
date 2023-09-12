@@ -1,9 +1,4 @@
-extends layout 
-
-block header 
-  section(class="logo")
-  form(action="/user/", method="get", class="home-btn-form") 
-   input(type="submit", value="home", class="home-btn")
+extends user_view 
 
 block navigation  
  form(action="/user/dashboard", method="get")
@@ -14,7 +9,8 @@ block navigation
   input(type="submit", value="search for user")
  form(action="/user/subscribed_to", method="get")
   input(type="submit", value="subscribed")
-
+ form(action="/admin/subscribers", method="get")
+  input(type="submit", value="subscribers")
  
 block content
  article(class="main-user-view")
@@ -30,7 +26,3 @@ block content
          p(class="article-widget-description") #{item.description}
         p(class="article-widget-likes")  #{"likes: " + item.likes.length}
         p(class="article-widget-dislikes") #{ "dislikes: " + item.dislikes.length}
-
-
-block footer 
- 

@@ -1,3 +1,6 @@
+/*!**************************************************************************!*\
+  !*** css ../node_modules/css-loader/dist/cjs.js!./stylesheets/style.css ***!
+  \**************************************************************************/
 body {
   padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -62,6 +65,15 @@ body {
     background-color: rgb(1, 75, 75);
     color: rgb(237, 234, 200);
   }
+}
+
+nav > form > * {
+  width: fit-content;
+
+}
+
+nav > form {
+  width: fit-content;
 }
 
 nav {
@@ -209,13 +221,15 @@ input[type="submit"], input[type="reset"] {
 	border: none;
 	cursor: pointer;
 	outline: inherit;
+  border-radius: 5px;
 }
 
 .article-widget{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
-  padding: clamp(5px, 10%, 20px)
+  padding: clamp(5px, 10%, 20px);
+  border-radius: 10px;
 }
 .article-widget-description{
   grid-column-start: 1;
@@ -266,8 +280,10 @@ p.article-text-content {
 }
 
 .home-btn {
-  width: clamp(50px, 10%, 200px)
+  width: clamp(50px, 10%, 200px);
 }
 .home-btn-form {
   padding-top: 10px;
 }
+
+

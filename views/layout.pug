@@ -2,8 +2,8 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src="/javascripts/file_server.js", defer)
+    link(rel="stylesheet", href="/style." + cssHash + ".css")
+    script(src="/client." + scriptHash + ".js", type="module")
   body
 
     header()

@@ -132,8 +132,13 @@ async function get_user_dashboard_object(user, res) {
 
     
     await refresh_token_db.save();
-        
-    res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/user');
+
+    if (user.role === 'user') {
+        res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/user');
+    }
+    else if (user.role === 'admin') {
+        res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/admin');
+    }
     // next()
 }
 
