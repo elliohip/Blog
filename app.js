@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var connect_db = require("./utils/connections/connect_db");
 
 require("dotenv").config();
 
@@ -19,9 +20,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var userRouter = require("./routes/user");
 var guestRouter = require('./routes/guest');
-
+let writerRouter = require("./routes/writer");
 
 var app = express();
+
+connect_db.connectToDatabase();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,12 +57,15 @@ passport.deserializeUser(User.deserializeUser())
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/user', userRouter);
-app.use('/guest', guestRouter)
+app.use('/guest', guestRouter);
+app.use("/writer", writerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+process.on('SIGINT', connect_db.shutdown);
 
 // error handler
 app.use(function(err, req, res, next) {

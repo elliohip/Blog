@@ -24,11 +24,9 @@ if (article_form) {
     console.log("title" + data);
     data.append("description", article_description.value);
     console.log("description" + data);
-
-
-        data.append("article_file", article_file.files[0]);
-    
+    data.append("article_file", article_file.files[0]);
     console.log("file" + data);
+    data.append("article_content", article_content.value)
 
     console.log(...data)
     

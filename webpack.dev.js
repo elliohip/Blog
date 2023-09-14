@@ -1,6 +1,6 @@
 // const webpack = require('webpack');
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: 'development',
@@ -15,9 +15,17 @@ module.exports = {
         publicPath: "/"
     },
     plugins: [
-        new MiniCssExtractPlugin({
-          filename: "style.[contenthash].css",
-        }),
+      new PugPlugin({
+        pretty: true, // formatting HTML, useful for development mode
+        js: {
+          // output filename of extracted JS file from source script
+          filename: 'assets/js/[name].[contenthash:8].js',
+        },
+        css: {
+          // output filename of extracted CSS file from source style
+          filename: 'assets/css/[name].[contenthash:8].css',
+        },
+      }),
     ],
     module: {
         rules: [
@@ -31,6 +39,10 @@ module.exports = {
                 failOnError: false,
                 failOnWarning: false
               }
+            },
+            {
+              test: /\.pug$/,
+              loader: PugPlugin.loader, // Pug loader
             },
             {
               test: /\.js$/,
@@ -54,7 +66,7 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                use: ['css-loader'],
             }
         ]
     }

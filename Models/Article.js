@@ -7,7 +7,7 @@ let articleSchema = new Schema({
     author_pen_name: {type: String, required: true},
     author: {type: Schema.Types.ObjectId, ref: "User", required: true},
     title: {type: String, required: true},
-    content: {type: String},
+    content: {type: String, required: true},
     likes: [{type: Schema.Types.ObjectId, ref: "User"}],
     dislikes: [{type: Schema.Types.ObjectId, ref: "User"}],
     comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],

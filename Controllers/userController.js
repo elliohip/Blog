@@ -3,6 +3,8 @@ const User = require("../Models/User");
 
 require('dotenv').config();
 
+let connect_db = require("../utils/connections/connect_db")
+
 const email_validator = require("deep-email-validator")
 
 const RefreshToken = require("../Models/RefreshToken")
@@ -16,7 +18,7 @@ const { get_all_articles } = require("../utils/article_lists/article_dashboards"
  * sends a sign up result to the 
  */
 module.exports.signup_post = asyncHandler(async (req, res, next) => {
-    await mongoose.connect(process.env.MONGO);
+    // await mongoose.connect(process.env.MONGO);
     console.log(process.env.MONGO);
     
 
@@ -27,7 +29,7 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
     }
     if (user_object.username != null && user_object.password != null) {
 
-        let check_user = await User.findOne({username: req.body.username});
+        let check_user = await User.findOne({username: req.body.username}).exec();
 
         if (!check_user) {
     
@@ -41,13 +43,21 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
             // console.log(email_validation_result.validators);
 
             if (!email_validation_result.valid) {
-                return res.render("sign_up", {message: "email is invalid"});
+                return res.render("sign_up", {
+                    message: "email is invalid",
+                    style: process.env.STYLE_URL, 
+                    js: process.env.JS_URL
+                });
             }
 
             let password_validation = (req.body.password == req.body.confirm_password);
 
             if (!password_validation) {
-                return res.render("sign_up", {message: "password and confirm password doesnt match"});
+                return res.render("sign_up", {
+                    message: "password and confirm password doesnt match",
+                    style: process.env.STYLE_URL, 
+                    js: process.env.JS_URL
+                });
             }
 
             let user = new User(user_object);
@@ -60,29 +70,37 @@ module.exports.signup_post = asyncHandler(async (req, res, next) => {
         }
         else if (check_user) {
 
-            res.render("sign_up", {message: "username exists"})
+            res.render("sign_up", {
+                message: "username exists",
+                style: process.env.STYLE_URL, 
+                js: process.env.JS_URL
+            })
         }
     }
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
     next();
 
 });
 
 /**
- * posts the login data, securely submits data to authorize users
+ * posts the login data, securely submits data to authorize users using jwt
  */
 module.exports.login_post = asyncHandler(async (req, res, next) => {
 
     console.log(req.body)
 
     if (req.body.username != null) {
-        await mongoose.connect(process.env.MONGO);
+
         let user = await User.findOne({username: req.body.username}).exec();
 
         console.log(user);
         
         if (!user) {
-            res.status(400).render("login", {message: "no user by that username"});
+            res.status(400).render("login", {
+                message: "no user by that username",
+                style: process.env.STYLE_URL, 
+                js: process.env.JS_URL
+            });
         }
 
         let are_match = await user.comparePassword(req.body.password);
@@ -94,9 +112,13 @@ module.exports.login_post = asyncHandler(async (req, res, next) => {
         
     }
     else {
-        res.status(400).render("login", {message: "username not sent"});
+        res.status(400).render("login", {
+            message: "username not sent",
+            style: process.env.STYLE_URL, 
+            js: process.env.JS_URL
+        });
     }
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
 
 });
 
@@ -132,14 +154,9 @@ async function get_user_dashboard_object(user, res) {
 
     
     await refresh_token_db.save();
-
-    if (user.role === 'user') {
-        res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/user');
-    }
-    else if (user.role === 'admin') {
-        res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/admin');
-    }
-    // next()
+    res.status(200).cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).redirect('/user');
+    
+    next()
 }
 
 /**
@@ -160,8 +177,6 @@ module.exports.authenticate_jwt = asyncHandler(async (req, res, next) => {
     let user_tok = jwt.verify(token, process.env.EXPRESS_SECRET);
     let user_refresh = jwt.verify(refresh_token, process.env.EXPRESS_REFRESH_SECRET);
 
-    await mongoose.connect(process.env.MONGO);
-
     let user = await User.findById(user_tok.id).exec();
     const containsRefreshTokens = await RefreshToken.findOne({user: user_tok.id}).exec();
 
@@ -175,7 +190,7 @@ module.exports.authenticate_jwt = asyncHandler(async (req, res, next) => {
     }
     else {
         let new_tok_string = user.generateRefreshToken();
-        console.log(user_tok)
+        console.log(user_tok);
         let new_token = await RefreshToken.findOneAndUpdate({user: user_tok.id}, {token: new_tok_string}, {new:true}).exec();
         console.log(new_token);
     }
@@ -184,33 +199,24 @@ module.exports.authenticate_jwt = asyncHandler(async (req, res, next) => {
 
     req.id = user_tok.id;
 
-    await mongoose.disconnect();
+    
 
     next();
 });
 
 module.exports.get_user_home = asyncHandler(async (req, res, next) => {
 
-    await mongoose.connect(process.env.MONGO)
-    console.log("fired user home function")
-    console.log(req.cookies.token);
-    let user = jwt.verify(String(req.cookies.token), process.env.EXPRESS_SECRET);
+    let user_ob = jwt.verify(String(req.cookies.token), process.env.EXPRESS_SECRET);    
+    console.log(user_ob);
 
-    console.log("after user");
-
-
-    console.log(user.id);
-
-    let user_db = await User.findById(user.id).exec();
-
-    console.log(user_db);
+    let user_db = await User.findById(req.id).exec();
 
     let homepage_object = {
-        id: req.id,
-        recommended: await get_all_articles()
+        user: user_db,
+        recommended: await get_all_articles(),
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     }
-
-    console.log(homepage_object);
 
     res.render("user_view", homepage_object);
 });
@@ -220,8 +226,6 @@ module.exports.logout = async function(req, res) {
     let token = jwt.verify(String(req.cookies.token), process.env.EXPRESS_SECRET)
 
     console.log(req);
-
-    await mongoose.connect(process.env.MONGO);
 
     let refreshQuery = await RefreshToken.findOne({user: token.id}).exec();
 
@@ -235,8 +239,6 @@ module.exports.logout = async function(req, res) {
     }
     await RefreshToken.deleteOne({_id: refreshQuery._id}).exec();
 
-    await mongoose.disconnect();
-
     return res
     .clearCookie("token")
     .clearCookie("refreshToken")
@@ -249,15 +251,15 @@ module.exports.logout = async function(req, res) {
  * @param {Response} res 
  */
 module.exports.get_user_detail = async (req, res) => {
+
     let user_id = req.params.user_id;
-    await mongoose.connect(process.env.MONGO);
 
     let user_db = User.findById(user_id).exec();
 
-    await mongoose.disconnect();
-
     res.render("user_details", {
-        user: user_db
+        user: user_db,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     });
 }
 
@@ -265,11 +267,16 @@ module.exports.get_user_dash = async (req, res) => {
 
     console.log("fired get dashboard")
 
+    let user_db = await User.findById(req.id);
+
+    console.log(user_db.role);
 
     // TODO: CHANGE THIS TO NOT ALL, CHANGE TO RECCOMENDED
     let dashboard_object = {
-        id: req.id,
-        recommended: get_all_articles()
+        user: user_db,
+        
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     }
     console.log(dashboard_object);
     

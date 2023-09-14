@@ -2,3 +2,5 @@
 /.env
 /external_user_links.txt
 /uploads
+/utils/authentication
+/utils/populate_tests

@@ -2,12 +2,15 @@ extends layout
 
 block header 
   section(class="logo")
-  form(action="/user/", method="get") 
+  form(action="/user", method="get") 
    input(type="submit", value="home")
 
 block navigation 
  form(action="/user/logout", method="post")
   input(type="submit", value="logout") 
+ if (user.role == 'admin' || user.role == 'writer')
+  form(action="/writer/create_article", method="get")
+   input(type="submit", value="create_article")
  
 
 block content 

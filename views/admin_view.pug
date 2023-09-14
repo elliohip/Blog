@@ -1,13 +1,13 @@
 extends user_view 
 
 block navigation  
- form(action="/user/dashboard", method="get")
+ form(action="/admin/dashboard", method="get")
   input(type="submit", value="dashboard", class="nav-dash-btn")
- form(action="/user/search_article", method="get")
+ form(action="/admin/search_article", method="get")
   input(type="submit", value="search for article")
- form(action="/user/search_user", method="get")
+ form(action="/admin/search_user", method="get")
   input(type="submit", value="search for user")
- form(action="/user/subscribed_to", method="get")
+ form(action="/admin/subscribed_to", method="get")
   input(type="submit", value="subscribed")
  form(action="/admin/subscribers", method="get")
   input(type="submit", value="subscribers")
@@ -19,7 +19,7 @@ block content
    if recommended
     each item in recommended 
      li() 
-      a(class="no-style-a", href="/user/article/" + item._id)
+      a(class="no-style-a", href="/admin/article/" + item._id)
        div(class="article-widget")
         p(class="article-widget-title")  #{item.title}
         if item.description 

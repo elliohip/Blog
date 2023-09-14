@@ -4,7 +4,7 @@ extends user_dash
 block content 
  article(class="create-article")
   h1() create new article: 
-  form(action="/user/dashboard/create_article", method="post", class="create-article-form", id="create-article-form-ident", enctype="multipart/form-data") 
+  form(action="/user/writer/create_article", method="post", class="create-article-form", id="create-article-form-ident", enctype="multipart/form-data") 
    label() author name: 
     input(type="text", name="author_pen_name", id="create-article-pen-name")
    label() title of article: 

@@ -8,9 +8,9 @@ var articleController = require("../Controllers/articleController");
 
 const { default: mongoose } = require('mongoose');
 
-const multer = require("multer")
+const multer = require("multer");
 
-const uploads = multer({dest: __dirname + "/../uploads"})
+const uploads = multer({dest: __dirname + "/../uploads"});
 
 /* GET home page. */
 router.get('/', userController.authenticate_jwt, userController.get_user_home);

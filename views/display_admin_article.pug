@@ -1,0 +1,16 @@
+extends admin_view 
+
+block content 
+ article(class="text-article-view")
+  if web_article
+   a(href="/admin/web_article/" + web_article._id)
+    p() check out a better format 
+  h1(class="article-title")  #{article.title} 
+  p(class="article-text-content") #{article.content} 
+  div(id="article-like-button-div")
+   a(href="/admin/article/" + article._id + "/like-article")
+    div() like button 
+  div(id="article-dislike-button-div") 
+   a(href="/admin/article/" + article._id + "/dislike-article")
+    div() dislike button 
+   

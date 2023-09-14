@@ -25,7 +25,7 @@ const userSchema = new Schema({
     liked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     disliked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}],
-    role: {type: String, enum: ['admin', 'user'], default: 'user'}
+    role: {type: String, enum: ['admin', 'writer', 'user'], default: 'user'}
 
 });
 

@@ -24,19 +24,19 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
     console.log(req.params)
 
-    await mongoose.connect(process.env.MONGO);
-
     let article_db = await Article.findById(req.params.article_id).exec();
 
     let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
 
     console.log(article_db)
 
-    await mongoose.disconnect();
+   
 
     res.render("display_article", {
         web_article: web_article_db,
-        article: article_db
+        article: article_db,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     })
     
     next();
@@ -54,15 +54,15 @@ module.exports.get_create_article = async (req, res) => {
 
     //console.log(process.env)
 
-    await mongoose.connect(process.env.MONGO)
 
     let user_db = await User.findById(req.id).exec();
     if (!user_db) {console.error("no user!!")};
     
-    await mongoose.disconnect();
 
     res.status(200).render("create_article", {
-        user: user_db
+        user: user_db,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     })
 }
 
@@ -76,7 +76,7 @@ module.exports.get_create_article = async (req, res) => {
  */
 module.exports.post_create_text_article = async (req, res) => {
     
-    await mongoose.connect(process.env.MONGO);
+
     console.log("before find user");
 
     console.log(req.id);
@@ -129,21 +129,25 @@ module.exports.post_create_text_article = async (req, res) => {
 
     
 
-    await mongoose.disconnect();
 
-    return res.render("user_dash");
+
+    return res.render("user_dash", {
+        user: current_user,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
+    });
 };
 
 
 
 module.exports.get_web_article = asyncHandler(async(req, res, next) => {
-    await mongoose.connect(process.env.MONGO);
+
 
     let web_article = await Web_Article.findById(req.params.web_article_id).exec();
 
     console.log(web_article.file.destination);
 
-    await mongoose.disconnect()
+
 
     res.send(web_article.file);
 
@@ -154,7 +158,7 @@ module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
 module.exports.add_like = asyncHandler(async(req, res, next) => {
 
-    await mongoose.connect(process.env.MONGO);
+
 
     
 
@@ -214,18 +218,19 @@ module.exports.add_like = asyncHandler(async(req, res, next) => {
 
     
 
-    await mongoose.disconnect();
+
 
     res.render("display_article", {
         article: article_db,
-        web_article: web_article_db
+        web_article: web_article_db,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     });
 
 });
 
 module.exports.add_dislike = asyncHandler(async (req, res, next) => {
-    await mongoose.connect(process.env.MONGO);
-
+    
     
 
     let user = await User.findById(req.id).exec();
@@ -274,10 +279,10 @@ module.exports.add_dislike = asyncHandler(async (req, res, next) => {
 
     
 
-    await mongoose.disconnect();
-
     res.render("display_article", {
         article: article_db,
-        web_article: web_article_db
+        web_article: web_article_db,
+        style: process.env.STYLE_URL, 
+        js: process.env.JS_URL
     });
 })
