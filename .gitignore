@@ -1,6 +1,7 @@
-/node_modules
-/.env
-/external_user_links.txt
-/uploads
-/utils/authentication
-/utils/populate_tests
+server/node_modules
+server/.env
+server/external_user_links.txt
+server/uploads
+server/utils/authentication
+server/utils/populate_tests
+/client

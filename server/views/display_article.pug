@@ -1,0 +1,20 @@
+extends user_view 
+
+block content 
+ article(class="text-article-view")
+  div(id="author-header")
+   div(id="user-profile-picture")
+   a(href="/user/search_user/" + article.author)
+    p=article.author_pen_name
+  if web_article
+   a(href="/user/web_article/" + web_article._id)
+    p() check out a better format 
+  h1(class="article-title")  #{article.title} 
+  p(class="article-text-content") #{article.content} 
+  div(id="article-like-button-div")
+   a(href="/user/article/" + article._id + "/like-article")
+    div() like button 
+  div(id="article-dislike-button-div") 
+   a(href="/user/article/" + article._id + "/dislike-article")
+    div() dislike button 
+   

@@ -1,0 +1,10 @@
+extends layout 
+
+block content 
+ sect()
+  h1=user.username 
+ sect()
+  h1() articles: 
+  ul()
+   each article in user.articles 
+    li=article

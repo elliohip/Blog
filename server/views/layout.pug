@@ -1,0 +1,20 @@
+doctype html
+html 
+  head
+    title=title
+    link(rel="stylesheet", href=require("../src/stylesheets/style.css"))
+    script(src=require("../src/user.js"), type="module")
+  body
+
+    header()
+     block header 
+
+    main()
+     nav()
+      block navigation
+      
+     block content
+
+    footer()
+     block footer 
+
