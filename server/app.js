@@ -3,9 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var connect_db = require("./utils/connections/connect_db");
-
 require("dotenv").config();
+var connect_db = require("./utils/connections/connect_db");
 
 var passport = require('passport')
 var LocalStrategy = require('passport-local');

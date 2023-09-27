@@ -13,6 +13,7 @@ let isDbConnected = false;
 async function connectToDatabase(func) {
   try {
 
+    console.log(process.env);
 
     await mongoose.connect(process.env.MONGO, {
       useNewUrlParser: true,

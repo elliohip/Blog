@@ -182,8 +182,7 @@ async function get_user_dashboard_object(user, res, next) {
  * @param {*} next 
  */
 module.exports.authenticate_jwt = asyncHandler(async (req, res, next) => {
-
-    console.log(req.url);
+console.log(req.url);
 
 
     console.log(req.cookies);

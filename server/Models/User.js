@@ -4,6 +4,8 @@ let passport_local_mongoose = require('passport-local-mongoose');
 
 let bcrypt = require("bcrypt");
 
+let paths = require("../utils/file_paths")
+
 let jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -25,7 +27,8 @@ const userSchema = new Schema({
     liked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     disliked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}],
-    role: {type: String, enum: ['admin', 'writer', 'user'], default: 'user'}
+    role: {type: String, enum: ['admin', 'writer', 'user'], default: 'user'},
+    pfp_path: {type: String, default: (paths.user_pfp + '/default-pfp.png')}
 
 });
 
