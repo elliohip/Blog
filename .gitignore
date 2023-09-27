@@ -1,3 +1,11 @@
+server/node_modules
+server/.env
+server/external_user_links.txt
+server/uploads
+server/utils/authentication
+server/utils/populate_tests
+/client
+
 # Logs
 logs
 *.log
@@ -128,10 +136,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-server/node_modules
-server/.env
-server/external_user_links.txt
-server/uploads
-server/utils/authentication
-server/utils/populate_tests
-/client
