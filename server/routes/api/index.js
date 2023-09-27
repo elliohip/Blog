@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router({mergeParams: true});
 
 let userController = require("../../Controllers/userController");
-
+var articleListController = require("../../Controllers/articleListController")
 let articleController = require("../../Controllers/articleController");
 
 var asyncHandler = require("express-async-handler");
@@ -42,5 +42,9 @@ router.get('/signup', function(req, res, next) {
   });
   next();
 });
+
+router.get("/trending-articles", articleListController.get_by_trending);
+router.get("/articles-by-liked", articleListController.get_by_liked);
+
 
 module.exports = router;

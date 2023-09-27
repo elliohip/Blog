@@ -20,7 +20,7 @@ get('/', userController.authenticate_jwt, userController.get_user_home);
 
 router.post("/logout", userController.authenticate_jwt, userController.logout);
 
-router.get("/trending-articles", userController.authenticate_jwt, articleListController.get_trending);
+// router.get("/trending-articles", userController.authenticate_jwt, articleListController.get_by_trending);
 
 router.get("/search_user/:user_id", userController.authenticate_jwt, userController.get_user_detail);
 
@@ -37,9 +37,12 @@ router.get("/web_article/:web_article_id", userController.authenticate_jwt, arti
 router.get("/dashboard/create_article", userController.authenticate_jwt, articleController.get_create_article);
 router.post("/dashboard/create_article", uploads.array('article_file'), userController.authenticate_jwt, articleController.post_create_text_article);
 
+router.get("/subscribed-articles", userController.authenticate_jwt, articleListController.get_by_subscribed);
+
 
 router.get("/search_user", userController.authenticate_jwt, userController.get_search_user);
 
-
+router.get("/recommended-articles", userController.authenticate_jwt, articleListController.get_by_trending);
 
 module.exports = router;
+
