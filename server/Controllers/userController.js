@@ -306,7 +306,6 @@ module.exports.get_user_dash = async (req, res) => {
     let dashboard_object = {
         user: user_db,
         
-        
     }
     console.log(dashboard_object);
     

@@ -8,11 +8,16 @@ var articleController = require("../../Controllers/articleController");
 
 const { default: mongoose } = require('mongoose');
 
-const multer = require("multer");
+let multer = require("multer");
 
-const uploads = multer({
-    dest: __dirname + "/../../uploads",
+let storages = require("../../server_storage_logic/multer_controller");
 
+/**
+ * storage array and file system to store user profile pictues in the uploads folder, 
+ * specified in storages options
+ */
+const pfp_uploads = multer({
+    storage: storages.pfp_storage
 });
 
 
@@ -20,15 +25,16 @@ const uploads = multer({
 /* GET home page. */
 router.get('/', userController.authenticate_jwt, userController.get_user_home);
 
+/**
+ * logout of page
+ */
 router.post("/logout", userController.authenticate_jwt, userController.logout);
 
-// router.get("/trending-articles", userController.authenticate_jwt, articleListController.get_by_trending);
-
-router.get("/search_user/:user_id", userController.authenticate_jwt, userController.get_user_detail);
-
+/**
+ * user dashbord
+ 
 router.get("/dashboard", userController.authenticate_jwt, userController.get_user_dash);
-
-router.get("/articles/:article_id", userController.authenticate_jwt, articleController.get_article_by_id);
+*/
 
 
 router.get("/article/:article_id/like-article", userController.authenticate_jwt, articleController.add_like);
@@ -37,7 +43,7 @@ router.get("/article/:article_id/dislike-article", userController.authenticate_j
 router.get("/web_article/:web_article_id", userController.authenticate_jwt, articleController.get_web_article);
 
 router.get("/dashboard/create_article", userController.authenticate_jwt, articleController.get_create_article);
-router.post("/dashboard/create_article", uploads.array('article_file'), userController.authenticate_jwt, articleController.post_create_text_article);
+router.post("/dashboard/create_article", pfp_uploads.array('article_file'), userController.authenticate_jwt, articleController.post_create_text_article);
 
 router.get("/subscribed-articles", userController.authenticate_jwt, articleListController.get_by_subscribed);
 
