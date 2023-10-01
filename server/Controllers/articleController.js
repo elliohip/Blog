@@ -24,13 +24,15 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
     console.log(req.params)
 
-    let article_db = await Article.findById(req.params.article_id).exec();
+    let article_db = await Article.findOneAndUpdate({_id: req.params.article_id}, {
+        $inc: {page_views: 1}
+    }, {
+        new: true
+    }).exec();
 
     let web_article_db = await Web_Article.findOne({article: article_db._id}).exec();
 
     console.log(article_db)
-
-    article_db.add_view();
    
 
     res.send({
@@ -61,8 +63,7 @@ module.exports.get_create_article = async (req, res) => {
     
 
     res.status(200).json({
-        user: user_db,
-        
+        user: user_db
     })
 }
 

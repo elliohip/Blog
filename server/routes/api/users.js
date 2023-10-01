@@ -9,4 +9,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/:user_id', usersController.get_user)
 
+router.get('/:user_id/get-pfp', usersController.get_user_pfp);
+
 module.exports = router;

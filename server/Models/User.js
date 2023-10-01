@@ -28,7 +28,7 @@ const userSchema = new Schema({
     disliked: [{type: Schema.Types.ObjectId, ref: "Article"}],
     notifications: [{type: Schema.Types.ObjectId, ref: "Notification"}],
     role: {type: String, enum: ['admin', 'writer', 'user'], default: 'user'},
-    pfp_path: {type: String, default: (paths.user_pfp + '/default-pfp.png')}
+    has_pfp: {type: Boolean, default: false}
 
 });
 

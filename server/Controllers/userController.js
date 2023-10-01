@@ -12,10 +12,45 @@ const email_validator = require("deep-email-validator")
 const RefreshToken = require("../Models/RefreshToken")
 
 const { default: mongoose, get } = require("mongoose");
+const fs = require("fs");
 
 const jwt = require("jsonwebtoken");
 const { get_all_articles } = require("../utils/article_lists/article_dashboards");
 const Article = require("../Models/Article");
+const FILE_PATHS = require("../utils/file_paths");
+
+const get_user_pfp = (id) => {
+    fs.readFile(FILE_PATHS.user_pfp + String(id) + ".png", (err, data) => {
+        if (err) {
+            fs.readFile(FILE_PATHS.user_pfp + "default-pfp.png", (err, data) => {
+                if (err) {
+                    return err
+                }
+                return data
+            })
+        } else if (data) {
+            return data
+        } 
+        else {
+            fs.readFile(FILE_PATHS.user_pfp + "default-pfp.png", (err, data) => {
+                if (err) {
+                    return err
+                } 
+                return data
+            })
+        }
+    });
+}
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @param {express.NextFunction} next 
+ */
+module.exports.user_pfp = (req, res, next) => {
+    let pfp = get_user_pfp(req.id);
+    res.json({pfp});
+}
 
 /**
  * sends a sign up result to the 
@@ -152,7 +187,7 @@ async function get_user_dashboard_object(user, res, next) {
 
     console.log(process.env)
 
-    let containsToken = RefreshToken.findOne({user: user._id}).exec()
+    let containsToken = await RefreshToken.findOne({user: user._id}).exec()
 
     if (!containsToken) {
         let refresh_token_db = new RefreshToken({user: user._id, token: refreshToken});
@@ -294,6 +329,11 @@ module.exports.get_user_detail = async (req, res) => {
     });
 }
 
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
 module.exports.get_user_dash = async (req, res) => {
 
     console.log("fired get dashboard")
@@ -305,7 +345,7 @@ module.exports.get_user_dash = async (req, res) => {
     // TODO: CHANGE THIS TO NOT ALL, CHANGE TO RECCOMENDED
     let dashboard_object = {
         user: user_db,
-        
+
     }
     console.log(dashboard_object);
     
@@ -315,3 +355,26 @@ module.exports.get_user_dash = async (req, res) => {
 module.exports.get_search_user = asyncHandler(async (req, res, next) => {
     res.json({})
 })
+
+/**
+ * controller for editing a users profile
+ */
+module.exports.edit_profile = asyncHandler(async (req, res, next) => {
+    let update_object = {}
+
+    if (req.file) {
+        
+    }
+    if (req.body.username) {
+        update_object.username = req.body.username
+    }
+    if (req.body.articles) {
+        
+    }
+
+    if (req.body.articles) {
+        let user = await User.findOneAndUpdate({_id: req.id}, {}, {}).exec();
+    }
+
+});
+
