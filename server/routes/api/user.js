@@ -57,7 +57,7 @@ router.get("/web_article/:web_article_id", userController.authenticate_jwt, arti
 router.get("/subscribed-articles", userController.authenticate_jwt, articleListController.get_by_subscribed);
 
 router.get("/get-pfp", userController.authenticate_jwt, (req, res, next) => {
-    res.redirect("../users/" + req.id);
+    res.redirect("../users/" + req.id + "/get-pfp");
 })
 
 

@@ -49,7 +49,7 @@ app.use(cookieParser({
 // Serve static files from the Vue app dist file
 app.use(express.static(path.join(`${__dirname}/../client/dist`)))
 
-console.log(__dirname)
+console.log(path.join(`${__dirname}/../client/dist`));
 
 app.use(require('express-session')(
   {

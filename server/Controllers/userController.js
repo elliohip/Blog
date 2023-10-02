@@ -19,38 +19,6 @@ const { get_all_articles } = require("../utils/article_lists/article_dashboards"
 const Article = require("../Models/Article");
 const FILE_PATHS = require("../utils/file_paths");
 
-const get_user_pfp = (id) => {
-    fs.readFile(FILE_PATHS.user_pfp + String(id) + ".png", (err, data) => {
-        if (err) {
-            fs.readFile(FILE_PATHS.user_pfp + "default-pfp.png", (err, data) => {
-                if (err) {
-                    return err
-                }
-                return data
-            })
-        } else if (data) {
-            return data
-        } 
-        else {
-            fs.readFile(FILE_PATHS.user_pfp + "default-pfp.png", (err, data) => {
-                if (err) {
-                    return err
-                } 
-                return data
-            })
-        }
-    });
-}
-/**
- * 
- * @param {express.Request} req 
- * @param {express.Response} res 
- * @param {express.NextFunction} next 
- */
-module.exports.user_pfp = (req, res, next) => {
-    let pfp = get_user_pfp(req.id);
-    res.json({pfp});
-}
 
 /**
  * sends a sign up result to the 

@@ -43,6 +43,7 @@ router.get('/signup', function(req, res, next) {
   next();
 });
 
+
 router.get("/trending-articles", articleListController.get_by_trending);
 router.get("/articles-by-liked", articleListController.get_by_liked);
 

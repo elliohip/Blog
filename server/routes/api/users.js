@@ -4,7 +4,7 @@ var usersController = require("../../Controllers/usersController")
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  // res.send('respond with a resource');
 });
 
 router.get('/:user_id', usersController.get_user)
