@@ -158,8 +158,9 @@ module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
 module.exports.add_like = asyncHandler(async(req, res, next) => {
 
-
-
+    if (!req.id) {
+        res.redirect("/signup");
+    }
     
 
     let user = await User.findById(req.id).exec();
@@ -169,27 +170,21 @@ module.exports.add_like = asyncHandler(async(req, res, next) => {
     if (!(article_db.likes.includes(user._id))) {
         await article_db.updateOne({
             $push: {likes: user._id}
-        }).exec();
+        }, {new: true}).exec();
 
         await user.updateOne({
-            $push: {likes: article_db._id}
-        }).exec();
+            $push: {liked: article_db._id}
+        }, {new: true}).exec();
         
         if (article_db.dislikes.includes(user._id)) {
-            console.log(article_db.dislikes);
 
             await article_db.updateOne({
                 $pull: {dislikes: user._id}
-            }, {}).exec();
-
-            console.log("article likes " + article_db.likes);
-            console.log("user liked " + user.liked);
+            }, {new: true}).exec();
 
             await user.updateOne({
                 $pull: {disliked: article_db._id},
-            }, {}).exec();
-
-            console.log("user disliked " + user.disliked);
+            }, {new: true}).exec();
 
             
         }
@@ -197,39 +192,30 @@ module.exports.add_like = asyncHandler(async(req, res, next) => {
         
     } else {
 
-        console.log("article likes " + article_db.likes);
-
         await article_db.updateOne({
             $pull: {likes: user._id}
-        }, {}).exec();
-        console.log("article likes " + article_db.likes);
-        console.log("user liked " + user.liked);
+        }, {new: true}).exec();
+        
+        
         await user.updateOne({
             $pull: {liked: article_db._id},
-        }, {}).exec();
+        }, {new: true}).exec();
 
-        console.log("user liked " + user.liked);
-
-        
-        
-        console.log("article likes " + article_db.likes);
-        console.log("user liked " + user.liked);
     }
-
-    
-
 
 
     res.json({
-        article: article_db,
-        web_article: web_article_db,
-        
+        likes: article_db.likes.length,
+        dislikes: article_db.dislikes.length
     });
 
 });
 
 module.exports.add_dislike = asyncHandler(async (req, res, next) => {
     
+    if (!req.id) {
+        res.redirect("/signup");
+    }
     
 
     let user = await User.findById(req.id).exec();
@@ -240,11 +226,11 @@ module.exports.add_dislike = asyncHandler(async (req, res, next) => {
 
         await article_db.updateOne({
             $push: {dislikes: user._id}
-        }).exec();
+        }, {new: true}).exec();
 
         await user.updateOne({
-            $push: {dislikes: article_db._id}
-        }).exec();
+            $push: {disliked: article_db._id}
+        }, {new: true}).exec();
 
         
         if (article_db.likes.includes(user._id)) {
@@ -253,12 +239,12 @@ module.exports.add_dislike = asyncHandler(async (req, res, next) => {
 
             await article_db.updateOne({
                 $pull: {likes: user._id}
-            }, {}).exec();
+            }, {new: true}).exec();
             console.log("article likes " + article_db.likes);
             console.log("user liked " + user.liked);
             await user.updateOne({
                 $pull: {liked: article_db._id},
-            }, {}).exec();
+            }, {new: true}).exec();
 
             console.log("user liked " + user.liked);
         }
@@ -279,8 +265,7 @@ module.exports.add_dislike = asyncHandler(async (req, res, next) => {
     
 
     res.json({
-        article: article_db,
-        web_article: web_article_db,
-        
+        likes: article_db.likes.length,
+        dislikes: article_db.dislikes.length
     });
 })

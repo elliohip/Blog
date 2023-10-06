@@ -14,29 +14,30 @@ module.exports.get_user = asyncHandler(async (req, res, next) => {
 });
 
 module.exports.get_user_pfp = asyncHandler(async (req, res, next) => {
-    let user = await User.findById(req.params.user_id).exec();
+    // let user = await User.findById(req.params.user_id).exec();
 
-    if (!user.has_pfp) {
-        try {
-            console.log(path.isAbsolute(path.join(__dirname, "../uploads/user_pfps/default-pfp.png")));
-            res.sendFile(path.resolve(path.join(__dirname, "../uploads/user_pfps/default-pfp.png")),
-            (err) => {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    console.log("sent file")
-                }
-            })
-        } catch(err) {
+    if (req.params.user_id) {
+        res.sendFile(path.resolve(path.join(__dirname, "../uploads/user_pfps/default-pfp.png")),(err) => {
+            if (err) {
+                console.log(err)
+            }
+            else {
+                console.log("sent file")
+            }
+        });
+    }
+
+    let pfp_path = path.resolve(path.join(__dirname, "..", "uploads", "user_pfps", req.params.user_id+ ".jpg"));
+
+   console.log(path.resolve(path.join(__dirname, "..", "uploads", "user_pfps", req.params.user_id+ ".jpg")));
+
+    fs.stat(pfp_path, (err, stats) => {
+        if (err) {
             console.log(err);
         }
-        
-    } else {
-        res.sendFile(process.env.DEFAULT_PFP_PATH + req.params.user_id, (err) => {
-            res.send(err);
+        res.sendFile(pfp_path, (err) => {
+            console.log(err);
         });
-        
-    }
+    });
     
 });

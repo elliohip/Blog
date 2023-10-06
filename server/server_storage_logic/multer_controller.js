@@ -1,11 +1,13 @@
 const multer = require("multer");
-
+const path = require("path")
 module.exports.pfp_storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, '../uploads/user_pfp');
+        cb(null, path.join(__dirname, '..', '/uploads', '/user_pfps'));
      },
     filename: function (req, file, cb) {
-        cb(null , req.id);
+
+        console.log(req.id + "." + file.mimetype.split('/')[1]);
+        cb(null , req.id + "." + file.mimetype.split('/')[1]);
     }
 });
 

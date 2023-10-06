@@ -13,11 +13,12 @@ const RefreshToken = require("../Models/RefreshToken")
 
 const { default: mongoose, get } = require("mongoose");
 const fs = require("fs");
-
+const Jimp = require('jimp')
 const jwt = require("jsonwebtoken");
 const { get_all_articles } = require("../utils/article_lists/article_dashboards");
 const Article = require("../Models/Article");
 const FILE_PATHS = require("../utils/file_paths");
+const path = require("path");
 
 
 /**
@@ -174,7 +175,7 @@ async function get_user_dashboard_object(user, res, next) {
     
     
     // res.set("Set-Cookie")
-    res.cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).status(200).end();
+    res.cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).json({user: user}).status(200).end();
     
 }
 
@@ -329,20 +330,43 @@ module.exports.get_search_user = asyncHandler(async (req, res, next) => {
  */
 module.exports.edit_profile = asyncHandler(async (req, res, next) => {
     let update_object = {}
-
+    console.log(req.body);
     if (req.file) {
-        
+        console.log(req.file.filename)
+        console.log(req.file.path)
+
+        if (req.file.mimetype.split("/")[1] != "jpeg") {
+            Jimp.read(req.file.path, (err, image) => {
+                if (err) {
+                    console.log(err)
+                    return;
+                }
+                console.log(path.resolve(__dirname + "/../uploads/user_pfps/" + path.parse(req.file.path).name + ".jpg"))
+                image.write(path.resolve(__dirname + "/../uploads/user_pfps/" + path.parse(req.file.path).name + ".jpg"), (err, value) => {
+
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+                fs.rm(req.file.path, (err) => {
+                    console.log(err);
+                });
+                
+                update_object.has_pfp = true;
+            })
+        }
+        else {
+            update_object.has_pfp = true;
+        }
     }
     if (req.body.username) {
         update_object.username = req.body.username
     }
-    if (req.body.articles) {
-        
-    }
 
-    if (req.body.articles) {
-        let user = await User.findOneAndUpdate({_id: req.id}, {}, {}).exec();
-    }
+
+    let user = await User.findByIdAndUpdate(req.id, update_object);
+
 
 });
 

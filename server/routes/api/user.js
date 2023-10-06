@@ -12,6 +12,7 @@ let multer = require("multer");
 
 let storages = require("../../server_storage_logic/multer_controller");
 
+console.log(storages.pfp_storage);
 /**
  * storage logic for the file system to store user profile pictues in the uploads folder, 
  * specified in storages options
@@ -41,11 +42,11 @@ router.post("/logout", userController.authenticate_jwt, userController.logout);
 router.get("/dashboard", userController.authenticate_jwt, userController.get_user_dash);
 */
 
-router.put('/dashboard/edit-profile', pfp_uploads.single("photo"), userController.authenticate_jwt, userController.edit_profile);
+router.put('/edit-profile', userController.authenticate_jwt, pfp_uploads.single('pfp'), userController.edit_profile);
 
 
-router.get("/article/:article_id/like-article", userController.authenticate_jwt, articleController.add_like);
-router.get("/article/:article_id/dislike-article", userController.authenticate_jwt, articleController.add_dislike);
+router.put("/article/:article_id/like-article", userController.authenticate_jwt, articleController.add_like);
+router.put("/article/:article_id/dislike-article", userController.authenticate_jwt, articleController.add_dislike);
 
 router.get("/web_article/:web_article_id", userController.authenticate_jwt, articleController.get_web_article);
 
@@ -58,7 +59,7 @@ router.get("/subscribed-articles", userController.authenticate_jwt, articleListC
 
 router.get("/get-pfp", userController.authenticate_jwt, (req, res, next) => {
     res.redirect("../users/" + req.id + "/get-pfp");
-})
+});
 
 
 router.get("/search_user", userController.authenticate_jwt, userController.get_search_user);
