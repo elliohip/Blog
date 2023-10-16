@@ -66,5 +66,7 @@ router.get("/search_user", userController.authenticate_jwt, userController.get_s
 
 router.get("/recommended-articles", userController.authenticate_jwt, articleListController.get_by_trending);
 
+router.put("/add-article", userController.authenticate_jwt, articleController.post_create_text_article);
+
 module.exports = router;
 

@@ -175,7 +175,10 @@ async function get_user_dashboard_object(user, res, next) {
     
     
     // res.set("Set-Cookie")
-    res.cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).json({user: user}).status(200).end();
+    res.cookie("token", accessToken, options_access).cookie("refreshToken", refreshToken, options_refresh).json({
+        username: user.username, 
+        role: user.role
+    }).status(200).end();
     
 }
 
@@ -199,37 +202,41 @@ console.log(req.url);
     const refresh_token =  String(req.cookies.refreshToken)
 
     console.log(token)
-    if (!token) { return res.json({message: "no cookie"})}
+    if (!token || token =='undefined') { 
+        return next();
+    } else {
 
 
-    let user_tok = jwt.verify(token, process.env.EXPRESS_SECRET);
-    let user_refresh = jwt.verify(refresh_token, process.env.EXPRESS_REFRESH_SECRET);
+        let user_tok = jwt.verify(token, process.env.EXPRESS_SECRET);
+        let user_refresh = jwt.verify(refresh_token, process.env.EXPRESS_REFRESH_SECRET);
 
-    let user = await User.findById(user_tok.id).exec();
-    const containsRefreshTokens = await RefreshToken.findOne({user: user_tok.id}).exec();
+        let user = await User.findById(user_tok.id).exec();
+        const containsRefreshTokens = await RefreshToken.findOne({user: user_tok.id}).exec();
 
-    if (!containsRefreshTokens) {
-        let new_tok_string = user.generateRefreshToken();
-        let new_token = new RefreshToken({
-            user: user_tok.id,
-            token: new_tok_string
-        });
-        await new_token.save();
-    }
-    else {
-        let new_tok_string = user.generateRefreshToken();
-        console.log(user_tok);
-        let new_token = await RefreshToken.findOneAndUpdate({user: user_tok.id}, {token: new_tok_string}, {new:true}).exec();
-        console.log(new_token);
-    }
+        if (!containsRefreshTokens) {
+            let new_tok_string = user.generateRefreshToken();
+            let new_token = new RefreshToken({
+                user: user_tok.id,
+                token: new_tok_string
+            });
+            await new_token.save();
+        }
+        else {
+            let new_tok_string = user.generateRefreshToken();
+            console.log(user_tok);
+            let new_token = await RefreshToken.findOneAndUpdate({user: user_tok.id}, {token: new_tok_string}, {new:true}).exec();
+            console.log(new_token);
+        }
 
-    console.log(user_tok)
+        console.log(user_tok)
 
-    req.id = user_tok.id;
-
+        req.id = user_tok.id;
+        req.role = user.role;
     
 
-    next();
+        next();
+    }
+
 });
 
 module.exports.get_user_home = asyncHandler(async (req, res, next) => {
@@ -370,3 +377,53 @@ module.exports.edit_profile = asyncHandler(async (req, res, next) => {
 
 });
 
+/**
+ * 
+ * @param {*} user user to check subscribed to
+ * @param {*} sub_user user to check subscribers
+ */
+let is_subscribed = (user, sub_user) => {
+    let arr = [];
+
+    if (sub_user.subscribers.includes(user._id) || user.subscribed.includes(sub_user._id)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/**
+ * subscribes or unsubscriibes from one client to another user
+ * based on the current state of subscription (can subscribe or not)
+ */
+module.exports.subscribe_to_user = asyncHandler(async (req, res, next) => {
+    console.log(req.params.user_id);
+    let client_user = await User.findById(req.id);
+    let sub_user = await User.findById(req.params.user_id);
+    let subscribed = false;
+    let unsubscribed = false;
+    if (!is_subscribed(client_user, sub_user)) {
+
+        client_user.update()
+
+        client_user.subscribed.push(req.params.user_id);
+        sub_user.subscribers.push(req.id);
+        subscribed = true;
+    }
+    else {
+        client_user.subscribed.filter((_id) => _id != req.params.user_id);
+        sub_user.subscribers.filter((_id) => _id != req.id);
+        unsubscribed = true;
+    }
+    client_user.save();
+    sub_user.save();
+    if(subscribed) {
+        res.json({subscribed});
+    }
+    else {
+        res.json({unsubscribed});
+    }
+    
+
+});

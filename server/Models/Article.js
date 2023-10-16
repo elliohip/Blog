@@ -13,7 +13,8 @@ let articleSchema = new Schema({
     comments: [{type: Schema.Types.ObjectId, ref: "Comment"}],
     description: {type: String}, 
     web_article: {type: Schema.Types.ObjectId, ref: "Web_Article"},
-    page_views: {type: Number}
+    page_views: {type: Number},
+    tags: [{type: String}],
 }, {timestamps: true,
  toJSON: {virtuals: true}});
 

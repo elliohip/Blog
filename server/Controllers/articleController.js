@@ -12,11 +12,12 @@ const jwt = require("jsonwebtoken");
 const Web_Article = require("../Models/Web_Article");
 
 const fs = require("fs");
-
+const express = require('express')
 
 
 const createDomPurify = require("dompurify");
 const {JSDOM} = require("jsdom");
+const Tag = require("../Models/Tag");
 
 
 
@@ -49,8 +50,8 @@ module.exports.get_article_by_id = asyncHandler(async (req, res, next) => {
 
 /**
  * 
- * @param {Request} req 
- * @param {Response} res 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
  */
 module.exports.get_create_article = async (req, res) => {
     // console.log(req.id)
@@ -67,79 +68,92 @@ module.exports.get_create_article = async (req, res) => {
     })
 }
 
-
+let get_tags = async (tag_list) => {
+    let tags = [];
+    let curr_tag = null;
+    for(let tag in tag_list) {
+        curr_tag = await Tag.findOne({name: tag}).exec();
+        if (curr_tag) {
+            tags.push(curr_tag._id);
+        }
+    }
+    return tags
+};
 
 /**
  * posts a create article as an HTML document with the script tags filtered out using HTML Purifier
  * 
- * @param {Request} req 
- * @param {Response} res 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
  */
 module.exports.post_create_text_article = async (req, res) => {
     
 
     console.log("before find user");
+    if (req.role == 'writer' || req.role == 'admin') {
 
-    console.log(req.id);
+        console.log(req.id);
 
-    let current_user = await User.findById(req.id).exec();
+        let current_user = await User.findById(req.id).exec();
 
-    console.log(req);
+        console.log(req.body);
 
-    console.log(req.files);
+        console.log(req.files);
+
+        
     
-
-    // console.log(current_user)
-    let article = new Article({
-        author: req.id,
-        author_pen_name: req.body.author_pen_name,
-        title: req.body.title,
-        content: req.body.article_content,
-        description: req.body.description
-    });
-
-    await current_user.articles.push(article._id);
-    console.log(current_user.isNew);
-    await current_user.save();
-
-    await article.save();
-
-    if (req.files[0]) {
-
-        console.log(req.files[0]);
-
-        let string_file = fs.readFileSync(req.files[0].path).toString();
-        
-        let web_article = new Web_Article({
-            article: article._id,
-            file: string_file
-            
+        let article = new Article({
+            author: req.id,
+            author_pen_name: req.body.author_pen_name,
+            title: req.body.title,
+            content: req.body.article_content,
+            description: req.body.description,
+            tags: req.body.tags
         });
+   
 
-        fs.rm(req.files[0].path, (err) => {
-            console.log("completed")
+        await current_user.articles.push(article._id);
+        console.log(current_user.isNew);
+        await current_user.save();
+
+        await article.save();
+
+        if (req.files[0]) {
+
+            console.log(req.files[0]);
+
+            let string_file = fs.readFileSync(req.files[0].path).toString();
             
+            let web_article = new Web_Article({
+                article: article._id,
+                file: string_file
+                
+            });
+
+            fs.rm(req.files[0].path, (err) => {
+                console.log("completed")
+                
+            });
+            
+
+
+            await web_article.save();
+        }
+
+
+
+        return res.json({
+            message: 'success',
         });
-        
-
-
-        await web_article.save();
     }
-
-    console.log(article);
-
     
-
-
-
-    return res.json({
-        user: current_user,
-        
-    });
 };
 
 
-
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
 module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
 
@@ -155,7 +169,10 @@ module.exports.get_web_article = asyncHandler(async(req, res, next) => {
 
 });
 
-
+/**
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
 module.exports.add_like = asyncHandler(async(req, res, next) => {
 
     if (!req.id) {
