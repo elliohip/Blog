@@ -62,11 +62,13 @@ router.get("/get-pfp", userController.authenticate_jwt, (req, res, next) => {
 });
 
 
-router.get("/search_user", userController.authenticate_jwt, userController.get_search_user);
+// router.get("/search_user", userController.authenticate_jwt, userController.get_search_user);
 
 router.get("/recommended-articles", userController.authenticate_jwt, articleListController.get_by_trending);
 
 router.put("/add-article", userController.authenticate_jwt, articleController.post_create_text_article);
+
+router.delete("/delete-article/:article_id", userController.authenticate_jwt, userController.);
 
 module.exports = router;
 
