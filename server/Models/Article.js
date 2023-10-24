@@ -22,6 +22,17 @@ articleSchema.methods.add_view = async function() {
     await this.model("Article").findOneAndUpdate({_id: this._id}, {$inc: {page_views: 1}}, {new: true})
 }
 
+articleSchema.pre("remove", async function() {
+    let this_id = this._id;
+    await Promise.all([
+        this.model('Comment').deleteMany({article: this_id}).exec(),
+        this.model('User').updateMany({saved: this_id}, {$pull: {saved: this_id}}).exec(),
+        this.model('User').updateMany({saved: this_id}, {$pull: {articles : this_id}}).exec(),
+        this.model('User').updateMany({saved: this_id}, {$pull: {liked: this_id}}).exec(),
+        this.model('User').updateMany({saved: this_id}, {$pull: {disliked: this_id}}).exec()
+    ]);
+});
+
 /**
  * gets the URL for this article
  */

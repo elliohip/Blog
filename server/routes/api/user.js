@@ -68,7 +68,11 @@ router.get("/recommended-articles", userController.authenticate_jwt, articleList
 
 router.put("/add-article", userController.authenticate_jwt, articleController.post_create_text_article);
 
-router.delete("/delete-article/:article_id", userController.authenticate_jwt, userController.);
+router.delete("/delete-article/:article_id", userController.authenticate_jwt, userController.delete_article);
+
+router.get("/articles", userController.authenticate_jwt, (req, res, next) => {
+    res.redirect("../users/" + req.id + "/articles");
+});
 
 module.exports = router;
 

@@ -429,5 +429,5 @@ module.exports.subscribe_to_user = asyncHandler(async (req, res, next) => {
 });
 
 module.exports.delete_article = asyncHandler(async (req, res, next) => {
-    
+    await Article.findByIdAndDelete(req.params.article_id);
 });

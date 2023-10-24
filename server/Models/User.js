@@ -125,7 +125,13 @@ userSchema.virtual("url").get(function() {
     return "/user/" + this._id;
 });
 
-
+userSchema.pre('remove', async function () {
+    let this_id = this._id;
+    await Promise.all([
+        this.model('Article').deleteMany({author: this_id}).exec(),
+        this.model('Comment').deleteMany({author: this_id}).exec()
+    ]);
+});
 
 
 module.exports = mongoose.model("User", userSchema);

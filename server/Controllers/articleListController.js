@@ -53,3 +53,10 @@ module.exports.get_by_liked = asyncHandler(async (req, res, next) => {
         res.json(err);
     }
 })
+
+module.exports.get_user_articles = asyncHandler(async (req, res, next) => {
+
+    let article_ids = (User.findById(req.user_id)).exec().articles;
+
+    res.json({article_ids});
+})
